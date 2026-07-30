@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alok — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EDEBE2;
+    --paper-dim: #E3E0D4;
+    --ink: #1C1F24;
+    --ink-soft: #4A4E55;
+    --steel: #2B5B8C;
+    --steel-soft: #6E8FAE;
+    --concrete: #8B8C86;
+    --line: #C7C3B6;
+    --line-strong: #A9A497;
+
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Source Serif 4', serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection{ background: var(--steel); color: var(--paper); }
+
+  a{ color: inherit; }
+
+  /* faint drafting grid, very quiet */
+  .grid-bg{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.35;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---------- top bar: sheet header ---------- */
+  .sheet-header{
+    border-bottom: 1.5px solid var(--ink);
+    padding: 18px 0;
+  }
+  .sheet-header .wrap{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  .sheet-header .mark{ color: var(--steel); font-weight: 500; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding: 120px 0 90px; }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steel);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .eyebrow::before{
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: var(--steel);
+  }
+  h1{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+    line-height: 1.03;
+    letter-spacing: -0.01em;
+    max-width: 15ch;
+  }
+  h1 em{
+    font-style: normal;
+    color: var(--steel);
+  }
+  .hero-sub{
+    margin-top: 26px;
+    max-width: 56ch;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+  .hero-sub strong{ color: var(--ink); font-weight: 600; }
+
+  /* dimension-line stat strip */
+  .dim-strip{
+    margin-top: 64px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .dim-item{
+    flex: 1 1 220px;
+    padding: 20px 24px 20px 0;
+    position: relative;
+  }
+  .dim-item:not(:last-child){ border-right: 1px solid var(--line-strong); }
+  .dim-item .tick{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--concrete);
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .dim-item .tick::before{ content: "⊢ "; color: var(--steel); }
+  .dim-item .num{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.9rem;
+    color: var(--ink);
+  }
+  .dim-item .label{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.03em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* ---------- section scaffolding ---------- */
+  section{ padding: 84px 0; border-top: 1px solid var(--line-strong); }
+  .sheet-no{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--steel);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    display: block;
+  }
+  h2{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+    letter-spacing: -0.01em;
+    max-width: 20ch;
+  }
+  .section-intro{
+    margin-top: 18px;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+
+  /* ---------- about / foundation ---------- */
+  .foundation-grid{
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+  }
+  .foundation-grid p{ color: var(--ink-soft); margin-bottom: 16px; }
+  .foundation-grid p strong{ color: var(--ink); font-weight: 600; }
+  .spec-list{
+    border-left: 2px solid var(--steel);
+    padding-left: 24px;
+  }
+  .spec-row{
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 0.95rem;
+  }
+  .spec-row:last-child{ border-bottom: none; }
+  .spec-row .k{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--concrete);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .spec-row .v{ text-align: right; color: var(--ink); }
+
+  /* ---------- fieldwork / case cards ---------- */
+  .cases{
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+  }
+  .case{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s ease;
+  }
+  .case:first-child{ border-top: 1px solid var(--line); }
+  .case:hover{ background: rgba(43,91,140,0.045); }
+  .case-meta{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--concrete);
+    letter-spacing: 0.04em;
+  }
+  .case-meta .org{
+    display: block;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: 0;
+  }
+  .case-body h3{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+  .case-body p{ color: var(--ink-soft); font-size: 0.98rem; max-width: 60ch; }
+  .case-tags{
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .case-tags span{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--steel);
+    border: 1px solid var(--steel-soft);
+    padding: 3px 9px;
+    border-radius: 2px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ---------- structures / leadership ---------- */
+  .structures{
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .structure-card{
+    border: 1px solid var(--line-strong);
+    padding: 28px;
+    position: relative;
+  }
+  .structure-card::before{
+    content: attr(data-tag);
+    position: absolute;
+    top: -11px;
+    left: 24px;
+    background: var(--paper);
+    padding: 0 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--steel);
+    letter-spacing: 0.08em;
+  }
+  .structure-card h3{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  .structure-card p{ color: var(--ink-soft); font-size: 0.97rem; }
+
+  /* ---------- toolkit ---------- */
+  .toolkit{
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    border: 1px solid var(--line-strong);
+  }
+  .tool{
+    background: var(--paper);
+    padding: 22px 20px;
+  }
+  .tool .cat{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--steel);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .tool ul{ list-style: none; }
+  .tool li{
+    font-size: 0.93rem;
+    color: var(--ink-soft);
+    padding: 4px 0;
+  }
+
+  /* ---------- title block / contact ---------- */
+  .titleblock{
+    border-top: 1.5px solid var(--ink);
+    padding: 56px 0 40px;
+  }
+  .tb-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .tb-top h2{ max-width: none; }
+  .tb-cta{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .tb-table{
+    margin-top: 44px;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .tb-cell{
+    padding: 14px 18px;
+    border-right: 1px solid var(--line-strong);
+  }
+  .tb-cell:last-child{ border-right: none; }
+  .tb-cell .k{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--concrete);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .tb-cell .v{
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 0.98rem;
+  }
+  .tb-cell .v a{ text-decoration: none; border-bottom: 1px solid var(--steel-soft); }
+  .tb-cell .v a:hover{ border-color: var(--ink); }
+  .footer-note{
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--concrete);
+    letter-spacing: 0.04em;
+  }
+
+  /* reveal on scroll */
+  .reveal{
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.in{ opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 760px){
+    .foundation-grid, .structures{ grid-template-columns: 1fr; gap: 32px; }
+    .case{ grid-template-columns: 1fr; gap: 10px; }
+    .toolkit{ grid-template-columns: 1fr; }
+    .tb-table{ grid-template-columns: 1fr 1fr; }
+    .dim-item{ flex: 1 1 45%; }
+  }
+
+  :focus-visible{
+    outline: 2px solid var(--steel);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity: 1; transform: none; transition: none; }
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header class="sheet-header">
+  <div class="wrap">
+    <span>Portfolio, Rev. 2026</span>
+    <span class="mark">Alok Kumar Pal, Civil Engineering to Growth &amp; Strategy</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero" style="border-top:none; padding-top:100px;">
+    <div class="eyebrow">Second year, B.Tech Civil Engineering, IIT (ISM) Dhanbad</div>
+    <h1>I build go to market work the same way I was trained to build structures: <em>load tested, not decorative.</em></h1>
+    <p class="hero-sub">Alok Kumar Pal studies Civil Engineering at IIT (ISM) Dhanbad and applies the same analytical grounding to growth, data, and GTM work: from landslide risk modeling to BI dashboards to consulting style strategy briefs.</p>
+
+    <div class="dim-strip">
+      <div class="dim-item">
+        <span class="tick">CGPA</span>
+        <span class="num">8.27</span>
+        <span class="label">out of 10, Civil Engineering</span>
+      </div>
+      <div class="dim-item">
+        <span class="tick">DASHBOARD PROJECT</span>
+        <span class="num">80%</span>
+        <span class="label">gain in reporting efficiency</span>
+      </div>
+      <div class="dim-item">
+        <span class="tick">LANDSLIDE STUDY</span>
+        <span class="num">3</span>
+        <span class="label">high risk territories mapped</span>
+      </div>
+      <div class="dim-item">
+        <span class="tick">MIC.DROP</span>
+        <span class="num">100+</span>
+        <span class="label">members, as club Secretary</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="foundation">
+    <span class="sheet-no">SHEET 01: FOUNDATION</span>
+    <h2>An engineering base, applied off the site</h2>
+    <p class="section-intro">Civil engineering teaches you to reason from constraints: loads, materials, failure modes, before you reason from ambition. That habit carries over cleanly into markets, data, and strategy work.</p>
+
+    <div class="foundation-grid">
+      <div>
+        <p>Alok is a <strong>second year B.Tech Civil Engineering student at IIT (ISM) Dhanbad</strong> (CGPA 8.27, expected May 2028), with coursework spanning structural engineering, geotechnical engineering, fluid mechanics and hydraulics, engineering graphics, construction planning and management, and foundation engineering.</p>
+        <p>Alongside the technical track, he runs a public speaking club as Secretary, leads on ground event operations for institute wide events, and builds data and strategy projects in his own time: a landslide risk model, a BI dashboard, and a surge management case study for Uber.</p>
+      </div>
+      <div class="spec-list">
+        <div class="spec-row"><span class="k">Base</span><span class="v">IIT (ISM) Dhanbad</span></div>
+        <div class="spec-row"><span class="k">Discipline</span><span class="v">Civil Engineering, Yr 2</span></div>
+        <div class="spec-row"><span class="k">CGPA</span><span class="v">8.27 / 10.00</span></div>
+        <div class="spec-row"><span class="k">Graduating</span><span class="v">May 2028</span></div>
+        <div class="spec-row"><span class="k">Targeting</span><span class="v">Consulting, GTM, BD, PM roles</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="fieldwork">
+    <span class="sheet-no">SHEET 02: FIELDWORK</span>
+    <h2>Research and projects</h2>
+    <p class="section-intro">Work built to be handed to a reviewer or a founder, not just filed away for a transcript.</p>
+
+    <div class="cases">
+      <div class="case">
+        <div class="case-meta">
+          <span class="org">Research Project</span>
+          Researcher, Dec 2025 to Jan 2026
+        </div>
+        <div class="case-body">
+          <h3>Landslide risk modeling, Bilaspur, HP</h3>
+          <p>Ran a geospatial analysis of the October 2025 Bilaspur landslide event, building a Multi Criteria Decision Analysis system that layered Digital Elevation Models with rainfall intensity, lithology, and slope stability. Produced heatmaps identifying the three most critical high risk territories, feeding directly into infrastructure resilience planning.</p>
+          <div class="case-tags"><span>Geospatial analysis</span><span>MCDA</span><span>Risk mapping</span></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-meta">
+          <span class="org">Data Professionals Survey Dashboard</span>
+          Power BI, personal project
+        </div>
+        <div class="case-body">
+          <h3>Interactive BI dashboard on 600+ professionals</h3>
+          <p>Built an interactive dashboard analyzing survey data from 600+ professionals to surface trends in roles, salaries, and tools. Automated the data cleaning, refresh, and reporting pipeline, cutting stakeholder decision making time by 80%.</p>
+          <div class="case-tags"><span>Power BI</span><span>Data cleaning</span><span>Automation</span></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case-meta">
+          <span class="org">Improving the Concert Experience with Uber</span>
+          Figma, Canva, personal project
+        </div>
+        <div class="case-body">
+          <h3>Surge management strategy for high demand events</h3>
+          <p>Designed a surge management strategy for Uber during high demand concert events, proposing carpooling and bus allocation, driver choice, and incentive features, prioritized using the RICE framework (top score 8.78 for carpooling and buses). Defined Rider NPS as the North Star metric, with cancellation rate and feature adoption as supporting KPIs.</p>
+          <div class="case-tags"><span>Product strategy</span><span>RICE prioritization</span><span>North Star metric</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="structures">
+    <span class="sheet-no">SHEET 03: STRUCTURES BUILT</span>
+    <h2>What he has built and run himself</h2>
+
+    <div class="structures">
+      <div class="structure-card" data-tag="LEADERSHIP">
+        <h3>Mic.Drop, Secretary</h3>
+        <p>Public speaking club at IIT (ISM) Dhanbad, grown to 100+ members. Currently focused on retention and onboarding, keeping a large club from thinning out after the first meeting.</p>
+      </div>
+      <div class="structure-card" data-tag="OPERATIONS">
+        <h3>Event &amp; Logistics Head, Basant 2026</h3>
+        <p>Led on ground operations for the centenary celebration and Alumni Reunion, coordinating logistics across a large, multi day institute event.</p>
+      </div>
+      <div class="structure-card" data-tag="OPERATIONS">
+        <h3>IFP '26</h3>
+        <p>Co coordinated and hosted the International Conference on Fluid Power, an international scale event held at IIT (ISM) Dhanbad.</p>
+      </div>
+      <div class="structure-card" data-tag="COMMUNITY">
+        <h3>Organiser, I I I 2026 &amp; Volunteer, KARTAVYA</h3>
+        <p>Organised the Institute Industry Interaction Conclave &amp; Exhibition, and volunteers with KARTAVYA, a student run NGO educating underprivileged children.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="toolkit">
+    <span class="sheet-no">SHEET 04: TOOLKIT</span>
+    <h2>What he works with</h2>
+
+    <div class="toolkit">
+      <div class="tool">
+        <span class="cat">Languages</span>
+        <ul>
+          <li>MATLAB</li>
+          <li>Python (NumPy, Pandas)</li>
+          <li>C++</li>
+        </ul>
+      </div>
+      <div class="tool">
+        <span class="cat">Software &amp; Analytics</span>
+        <ul>
+          <li>Power BI, Tableau</li>
+          <li>Google Analytics</li>
+          <li>GIS Mapping, QGIS</li>
+        </ul>
+      </div>
+      <div class="tool">
+        <span class="cat">Productivity &amp; Design</span>
+        <ul>
+          <li>Figma, Canva</li>
+          <li>Microsoft 365</li>
+          <li>PowerPoint decks</li>
+        </ul>
+      </div>
+      <div class="tool">
+        <span class="cat">Soft Skills</span>
+        <ul>
+          <li>Public speaking</li>
+          <li>Stakeholder management</li>
+          <li>Requirement gathering</li>
+        </ul>
+      </div>
+      <div class="tool">
+        <span class="cat">Leadership</span>
+        <ul>
+          <li>Team leadership</li>
+          <li>Event operations</li>
+          <li>Problem solving</li>
+        </ul>
+      </div>
+      <div class="tool">
+        <span class="cat">Outside Work</span>
+        <ul>
+          <li>Badminton (state level)</li>
+          <li>Chess, cricket</li>
+          <li>Table tennis</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="titleblock" id="contact">
+    <div class="tb-top">
+      <div>
+        <span class="sheet-no">SHEET 05: TITLE BLOCK</span>
+        <h2>Let's talk</h2>
+      </div>
+      <div class="tb-cta">Open to Founder's Office, Growth, GTM, BD &amp; PM roles</div>
+    </div>
+
+    <div class="tb-table">
+      <div class="tb-cell">
+        <span class="k">Drawn by</span>
+        <span class="v">Alok Kumar Pal</span>
+      </div>
+      <div class="tb-cell">
+        <span class="k">Institution</span>
+        <span class="v">IIT (ISM) Dhanbad</span>
+      </div>
+      <div class="tb-cell">
+        <span class="k">Email</span>
+        <span class="v"><a href="mailto:24je0007@iitism.ac.in">24je0007@iitism.ac.in</a></span>
+      </div>
+      <div class="tb-cell">
+        <span class="k">Phone</span>
+        <span class="v"><a href="tel:+917068205981">+91 70682 05981</a></span>
+      </div>
+    </div>
+    <div class="tb-table" style="border-top: none;">
+      <div class="tb-cell">
+        <span class="k">LinkedIn</span>
+        <span class="v"><a href="https://linkedin.com/in/alok-pal-8458a71ab" target="_blank" rel="noopener">linkedin.com/in/alok-pal-8458a71ab</a></span>
+      </div>
+      <div class="tb-cell">
+        <span class="k">GitHub</span>
+        <span class="v"><a href="https://github.com/alokpal026026-oss" target="_blank" rel="noopener">github.com/alokpal026026-oss</a></span>
+      </div>
+      <div class="tb-cell">
+        <span class="k">Admission No.</span>
+        <span class="v">24JE0007</span>
+      </div>
+      <div class="tb-cell">
+        <span class="k">Location</span>
+        <span class="v">Dhanbad, Jharkhand</span>
+      </div>
+    </div>
+
+    <p class="footer-note">Rev. 2026, built from resume RESUME_SUMMER.pdf</p>
+  </section>
+
+</div>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
